@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "semi": "off",
+    "no-plusplus": "off",
+    "eol-last": "off",
+    "no-tabs": "off",
+    "no-alert": "off",
+    "prefer-destructuring": "off",
+    "indent": [2, "tab"]
+  }
+}
