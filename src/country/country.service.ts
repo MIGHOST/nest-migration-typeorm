@@ -23,16 +23,16 @@ export class CountryService {
 
     async getAllCountry(): Promise<Country[]> {
         const country = await this.countryRepo
-        .createQueryBuilder()
-        .select(["country.name"])       
-        .from(Country, "country")    
+        .createQueryBuilder("country")
+        .select(["country.name", "country.abbreviation", "user.firstName", "user.countryId"])       
+        .leftJoin("country.user", "user")    
         .getMany();
         return country;
 }
     async getCountryById(id:number) {
         const country = await this.countryRepo
         .createQueryBuilder()
-        .select(["country.name"])
+        .select(["country.name", "country.abbreviation"])
         .from(Country, "country")
         .where(`country.id = ${id}`)
         .getOne();

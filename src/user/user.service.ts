@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import User from './user.entity';
 
+
 @Injectable()
 export class UserService {
     constructor(
@@ -21,15 +22,31 @@ export class UserService {
         .execute()
         return newUser
 }
-    async getAllUsers(): Promise<User[]> {
-        const users = await this.userRepo
-        .createQueryBuilder()
-        .select(["u.id","u.email", "u.firstName", "u.login"])       
-        .from(User, "u")    
-        .getMany();
-        return users;
+async getAllUsers(): Promise<User[]> {
+    const users = await this.userRepo
+    .createQueryBuilder("u")
+    .select([
+        'u.id',
+        'u.email',
+        'u.firstName',
+        'u.login',
+        'u.age',
+        'a.id',
+        'a.title',
+        'a.content',
+        'a.userId',
+        'c.id',
+        'c.name',
+        'c.abbreviation',
+        'c.capital'
+         ])
+    .leftJoin("u.article", "a")
+    .leftJoin("u.country", "c")
+    .getMany(); 
+    return users;
 }
-    async getUserByEmail(email: string) {
+
+async getUserByEmail(email: string) {
         const user = await this.userRepo.findOne({email});
         if(user){
             return user;
@@ -39,11 +56,11 @@ export class UserService {
     
     async getUserById(id: number){
     const user = await this.userRepo
-    .createQueryBuilder("user")
-    .leftJoinAndSelect("user.country", "country")
-    // .select(["u.id","u.email", "u.firstName", "u.login"])       
-    .from(User, "user")
-    .where(`user.id = :id`, {id: 1})
+    .createQueryBuilder()
+    // .leftJoinAndSelect("user.country", "country")
+    .select(["u.id","u.email", "u.firstName", "u.login"])       
+    .from(User, "u")
+    .where(`u.id = :id`, {id: 1})
     .getOne(); 
     return user;
 }

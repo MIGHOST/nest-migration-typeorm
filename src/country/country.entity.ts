@@ -9,7 +9,7 @@ export class Country {
     public name: string;
     @Column({unique: true})
     public abbreviation: string;
-    @OneToMany(()=>User, (user: User)=> user.country.name) // oneToMany .country.name
-    public user: User; 
-    // @ManyToOne(type => User, user => user.country.name) user?: User; 
+    @Column()
+    public capital: string;
+    @OneToMany(() =>User, user=> user.country) user?: User[] // oneToMany .country.name
 }

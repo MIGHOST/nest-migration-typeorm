@@ -11,8 +11,8 @@ export class UserController {
     @Get()
     getAllUsers(): Promise<User[]>{
         return this.userService.getAllUsers();
-    }
-
+    }   
+ 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     getUserById(@Param('id') id: number): Promise<User>{

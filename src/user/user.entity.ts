@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, JoinTable, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Article } from "./../article/article.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Country } from './../country/country.entity';
 
 @Entity()
@@ -13,13 +14,14 @@ export class User {
   public login: string;
   @Column()
   public password: string;
-  // @OneToOne(()=> Country)
-  // @JoinTable({
-  //   name: "country",
-  //   joinColumns: [{name: "name"}]
-  // })
-  // public country: Country;
-  @OneToMany(type => Country, country => country.user) country?: Country; 
+  @Column()
+  public age: number;
+  @Column()
+  public countryId: number;  
+  @OneToMany(type => Article, (article) => article.user) article?: Article[]; 
+  @ManyToOne(()=> Country, country => country.user)
+  country: Country;
+  
 }
 export default User;
 
