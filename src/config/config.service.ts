@@ -55,8 +55,10 @@ class ConfigService {
       cli: {
         migrationsDir: 'src/migration',
       },
+      
 
       ssl: this.isProduction(),
+      
     };
   }
 

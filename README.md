@@ -11,3 +11,6 @@ left join country on country.id = u.countryid
 
 select * from "user" u
 left join article a on u.id = a."userId"  
+
+
+

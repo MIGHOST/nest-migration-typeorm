@@ -20,11 +20,12 @@ export class UserService {
         .into(User)
         .values(user)
         .execute()
-        return newUser
+        return newUser;
 }
 async getAllUsers(): Promise<User[]> {
     const users = await this.userRepo
     .createQueryBuilder("u")
+    // .take(2)
     .select([
         'u.id',
         'u.email',
@@ -39,10 +40,24 @@ async getAllUsers(): Promise<User[]> {
         'c.name',
         'c.abbreviation',
         'c.capital'
-         ])
+        ])
+    .orderBy("u.id")
     .leftJoin("u.article", "a")
     .leftJoin("u.country", "c")
+    // .take(3)
     .getMany(); 
+    return users;
+}
+
+
+
+async getAllUsersWithLanguage (): Promise<User[]>{
+    const users = await this.userRepo
+    .createQueryBuilder('u')
+    .select(["u.firstName", "utl.userId", "language.name"])
+    .innerJoin('u.utl', "utl")
+    .innerJoin("utl.language", "language")
+    .getMany()
     return users;
 }
 
@@ -60,9 +75,12 @@ async getUserByEmail(email: string) {
     // .leftJoinAndSelect("user.country", "country")
     .select(["u.id","u.email", "u.firstName", "u.login"])       
     .from(User, "u")
-    .where(`u.id = :id`, {id: 1})
+    .where(`u.id = ${id}`)
     .getOne(); 
-    return user;
+    if(user){
+        return user;
+    }
+    throw new HttpException(`User with id "${id}" does not exist`, HttpStatus.NOT_FOUND);
 }
     async updateUser(id: number, updateUser: UpdateUserDto ){
         await this.userRepo.update(id, updateUser)
@@ -86,6 +104,9 @@ async getUserByEmail(email: string) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND)
         }
     }
+
+
+    
 }
 
     // async updateUser(id: number, updateUser: UpdateUserDto ){
