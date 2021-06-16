@@ -28,6 +28,13 @@ export class UserController {
     getUserById(@Param('id') id: number): Promise<User>{
         return this.userService.getUserById(id)
     }
+
+    @Get(':email')
+    @HttpCode(HttpStatus.OK)
+    getUserByEmail(@Param('email') email: string): Promise<User>{
+        return this.userService.getUserByEmail(email)
+    }
+
     @ApiOperation({summary: "Create User"})
     @ApiResponse({status: 200, type: User})
     @Post()

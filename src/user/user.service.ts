@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { createQueryBuilder, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import User from './user.entity';
@@ -61,12 +61,26 @@ async getAllUsersWithLanguage (): Promise<User[]>{
     return users;
 }
 
-async getUserByEmail(email: string) {
-        const user = await this.userRepo.findOne({email});
-        if(user){
-            return user;
-        }
-        throw new HttpException(`User with ${email} does not exist`, HttpStatus.NOT_FOUND);
+// async getUserByEmail(email: string) {
+//     const user = await this.userRepo.findOne({ email });
+//     if (user) {
+//       return user;
+//     }
+//         throw new HttpException(`User with ${email} does not exist`, HttpStatus.NOT_FOUND);
+// }
+
+async getUserByEmail(email: string): Promise<User> {
+    console.log(email);
+    const user = await this.userRepo
+    .createQueryBuilder()
+    .select(['u.id','u.email','u.firstName','u.login','u.age'])
+    .from(User, "u")
+    .where(`u.email = ${email}`)
+    .getOne(); 
+    if(user){
+        return user;
+    }
+    throw new HttpException(`User with email "${email}" does not exist`, HttpStatus.NOT_FOUND);
 }
     
     async getUserById(id: number){
